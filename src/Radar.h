@@ -14,7 +14,7 @@ private:
 	int paramNum = 8; // Number of parameters in TestCase
 	std::vector<Hit> hitList; // We keep track of all the hits
 public:
-	Radar();
+	void Initialize();
 	void LoadAircrafts(); // Loads all aircrafts from TestCase
 	~Radar();
 };
