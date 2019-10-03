@@ -11,8 +11,7 @@
 
 class Radar {
 private:
-	int paramNum = 8; // Number of parameters below
-	int id, x, y, z, vx, vy, vz, time; // Parameters
+	int paramNum = 8; // Number of parameters in TestCase
 	std::vector<Hit> hitList; // We keep track of all the hits
 public:
 	Radar();
