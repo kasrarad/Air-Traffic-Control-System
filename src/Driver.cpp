@@ -1,5 +1,7 @@
 #include <iostream>
 
+#include "Radar.h"
+
 using namespace std;
 
 /* Global Variables */
@@ -10,6 +12,6 @@ double aircraftDimension[3] = {30.48, 7.62, 4.572}; // Converted to km (100 000 
 
 int main() {
 	cout<<"Test";
-
+	Radar();
 	return 0;
 }
