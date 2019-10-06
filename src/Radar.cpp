@@ -24,5 +24,13 @@ void Radar::LoadAircrafts() {
 	}
 }
 
+void Radar::CheckTrackedArea() {
+	for (size_t i = 0; i < hitList.size(); i++) {
+		if (hitList[i].GetPosition[0] == dimensionXY && hitList[i].GetPosition[1] == dimensionXY && hitList[i].GetPosition[2] == dimensionZ) {
+			//trackedAircrafts[i]
+		}
+	}
+}
+
 Radar::~Radar() {
 }
