@@ -16,12 +16,12 @@ private:
 	int dimensionZ = 25000; // miles
 	int paramNum = 8; // Number of parameters in TestCase
 	std::vector<Hit*> hitList; // We keep track of all the hits
-	std::vector<TrackFile*> trackedAircrafts; // List of tracked aircraft files
+	std::vector<Hit*> trackedAircrafts; // List of tracked aircraft files
 public:
 	void Initialize();
 	void LoadAircrafts(); // Loads all aircrafts from TestCase
 	void CheckTrackedArea();
 	std::vector<Hit*> GetHitList();
-	std::vector<TrackFile*> GetTrackFileList();
+	std::vector<Hit*> GetTrackFileList();
 	~Radar();
 };

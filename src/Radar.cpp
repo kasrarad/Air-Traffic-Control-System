@@ -5,6 +5,7 @@ using namespace std;
 
 void Radar::Initialize() {
 	LoadAircrafts();
+	CheckTrackedArea();
 }
 
 void Radar::LoadAircrafts() {
@@ -31,15 +32,15 @@ void Radar::CheckTrackedArea() {
 	for (size_t i = 0; i < hitList.size(); i++) { // array[i][j]
 		if (hitList[i]->GetPosition()[x] <= dimensionXY && hitList[i]->GetPosition()[y] <= dimensionXY && hitList[i]->GetPosition()[z] <= dimensionZ) {
 			int id = hitList[i]->GetID();
-			int speedX = hitList[i]->GetPosition()[x];
-			int speedY = hitList[i]->GetPosition()[y];
-			int speedZ = hitList[i]->GetPosition()[z];
-			int posX = hitList[i]->GetSpeed()[x];
-			int posY = hitList[i]->GetSpeed()[y];
-			int posZ = hitList[i]->GetSpeed()[z];
+			int speedX = hitList[i]->GetSpeed()[x];
+			int speedY = hitList[i]->GetSpeed()[y];
+			int speedZ = hitList[i]->GetSpeed()[z];
+			int posX = hitList[i]->GetPosition()[x];
+			int posY = hitList[i]->GetPosition()[y];
+			int posZ = hitList[i]->GetPosition()[z];
 			int timeE = hitList[i]->GetTime();
 
-			TrackFile* trackFile = new TrackFile(id, speedX, speedY, speedZ, posX, posY, posZ, timeE);
+			Hit* trackFile = new Hit(id, speedX, speedY, speedZ, posX, posY, posZ, timeE);
 			trackedAircrafts.push_back(trackFile);
 		}
 	}
@@ -49,7 +50,7 @@ vector<Hit*> Radar::GetHitList() {
 	return hitList;
 }
 
-vector<TrackFile*> Radar::GetTrackFileList() {
+vector<Hit*> Radar::GetTrackFileList() {
 	return trackedAircrafts;
 }
 
@@ -59,7 +60,7 @@ Radar::~Radar() {
 	}
 	hitList.clear();
 
-	for (vector<TrackFile*>::iterator it = trackedAircrafts.begin(); it < trackedAircrafts.end(); it++) {
+	for (vector<Hit*>::iterator it = trackedAircrafts.begin(); it < trackedAircrafts.end(); it++) {
 		delete *it;
 	}
 	trackedAircrafts.clear();
