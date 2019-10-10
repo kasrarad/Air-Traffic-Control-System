@@ -19,18 +19,48 @@ void Radar::LoadAircrafts() {
 		int z = aircrafts.airplane_schedule[i + 5 + 7 * (i - 1)];
 		int time = aircrafts.airplane_schedule[i + 6 + 7 * (i - 1)];
 
-		Hit hit(id, speedX, speedY, speedZ, x, y, z, time);
+		Hit* hit = new Hit(id, speedX, speedY, speedZ, x, y, z, time);
 		hitList.push_back(hit);
 	}
 }
 
 void Radar::CheckTrackedArea() {
-	for (size_t i = 0; i < hitList.size(); i++) {
-		if (hitList[i].GetPosition[0] == dimensionXY && hitList[i].GetPosition[1] == dimensionXY && hitList[i].GetPosition[2] == dimensionZ) {
-			//trackedAircrafts[i]
+	int x = 0;
+	int y = 1;
+	int z = 2;
+	for (size_t i = 0; i < hitList.size(); i++) { // array[i][j]
+		if (hitList[i]->GetPosition()[x] <= dimensionXY && hitList[i]->GetPosition()[y] <= dimensionXY && hitList[i]->GetPosition()[z] <= dimensionZ) {
+			int id = hitList[i]->GetID();
+			int speedX = hitList[i]->GetPosition()[x];
+			int speedY = hitList[i]->GetPosition()[y];
+			int speedZ = hitList[i]->GetPosition()[z];
+			int posX = hitList[i]->GetSpeed()[x];
+			int posY = hitList[i]->GetSpeed()[y];
+			int posZ = hitList[i]->GetSpeed()[z];
+			int timeE = hitList[i]->GetTime();
+
+			TrackFile* trackFile = new TrackFile(id, speedX, speedY, speedZ, posX, posY, posZ, timeE);
+			trackedAircrafts.push_back(trackFile);
 		}
 	}
 }
 
+vector<Hit*> Radar::GetHitList() {
+	return hitList;
+}
+
+vector<TrackFile*> Radar::GetTrackFileList() {
+	return trackedAircrafts;
+}
+
 Radar::~Radar() {
+	for (vector<Hit*>::iterator it = hitList.begin(); it < hitList.end(); it++) {
+		delete *it;
+	}
+	hitList.clear();
+
+	for (vector<TrackFile*>::iterator it = trackedAircrafts.begin(); it < trackedAircrafts.end(); it++) {
+		delete *it;
+	}
+	trackedAircrafts.clear();
 }
