@@ -2,12 +2,18 @@
  * display.cpp
  *
  *  Created on: Oct 11, 2019
- *      
+ *  Author: ajalnaseri    
+ *
  */
+
+#include <iostream>
 
 #include "Display.h"
 
-void Display::PrintGrid(vector<TrackFile> trackfile){
+Display::Display() {
+}
+
+void Display::PrintGrid(vector<Hit*> trackfile){
 
 	cout << "Air Traffic Controller Display" << endl;
 
@@ -41,13 +47,13 @@ void Display::PrintGrid(vector<TrackFile> trackfile){
 
 					bool found, unknown;
 
-					for (int d = 0; d< trackfile.size(); d++)
+					for (size_t d = 0; d< trackfile.size(); d++)
 					{
 						found = false;
 						unknown = false;
-						if (((trackfile[d].GetPosition()[0])/4000) == c && ((trackfile[d].GetPosition()[1])/4000) == b) {
+						if (((trackfile[d]->GetPosition()[0])/4000) == c && ((trackfile[d]->GetPosition()[1])/4000) == b) {
 							found = true;
-							if (trackfile[d].GetID() == -1){
+							if (trackfile[d]->GetID() == -1){
 								unknown = true;
 							}
 							break;

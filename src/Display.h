@@ -8,19 +8,20 @@
 #ifndef DISPLAY_H_
 #define DISPLAY_H_
 
-#include "TrackFile.h"
+#include "Hit.h"
 #include <vector>
 
 using namespace std;
 
 
-class Display : public TrackFile {
+class Display {
 
 //Display class public members
 public:
 
 //Air traffic controller grid display function
-void PrintGrid(vector<TrackFile> trackfile);
+Display();
+void PrintGrid(vector<Hit*> trackfile);
 
 
 //Display class private members
