@@ -10,7 +10,7 @@
 
 using namespace std;
 
-//Position class functions definition
+// Position class functions definition
 
 Position::Position(){
 
