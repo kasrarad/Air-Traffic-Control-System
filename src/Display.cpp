@@ -2,7 +2,7 @@
  * display.cpp
  *
  *  Created on: Oct 11, 2019
- *      Author: philippeaboukasm
+ *      
  */
 
 #include "Display.h"
