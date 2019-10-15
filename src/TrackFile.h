@@ -17,9 +17,10 @@ private:
 	int time;
 public:
 	TrackFile(int identification, int speedX, int speedY, int speedZ, int positionX, int positionY, int positionZ, int timeEntry);
-	virtual int GetID();
-	virtual std::vector<int> GetSpeed();
-	virtual std::vector<int> GetPosition();
-	virtual int GetTime();
-	virtual ~TrackFile();
+	TrackFile();
+	int GetID();
+	 std::vector<int> GetSpeed();
+	 std::vector<int> GetPosition();
+	 int GetTime();
+	 ~TrackFile();
 };
