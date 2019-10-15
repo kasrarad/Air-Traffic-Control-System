@@ -6,6 +6,10 @@ Hit::Hit(int identification, int speedX, int speedY, int speedZ, int positionX, 
 id(identification), vx(speedX), vy(speedY), vz(speedZ), x(positionX), y(positionY), z(positionZ), time(timeEntry) {
 }
 
+Hit::Hit(){
+
+}
+
 int Hit::GetID() {
 	return id;
 }

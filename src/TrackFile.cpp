@@ -14,6 +14,10 @@ Hit(identification, speedX, speedY, speedZ, positionX, positionY, positionZ, tim
 	this->time = timeEntry;
 }
 
+TrackFile::TrackFile(){
+
+}
+
 int TrackFile::GetID() {
 	return id;
 }
