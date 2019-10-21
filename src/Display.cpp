@@ -17,7 +17,7 @@ void Display::PrintGrid(vector<Hit*> trackfile){
 
 	cout << "Air Traffic Controller Display" << endl;
 
-	for (int a = 0; a < 101; a++){
+	for (int a = 0; a < 26; a++){
 
 				if (a == 0) {
 					cout << "{  }{ 0}";

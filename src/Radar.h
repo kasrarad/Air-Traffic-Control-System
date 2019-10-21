@@ -21,6 +21,7 @@ public:
 	void Initialize();
 	void LoadAircrafts(); // Loads all aircrafts from TestCase
 	void CheckTrackedArea();
+	bool CollisionCheck();
 	std::vector<Hit*> GetHitList();
 	std::vector<Hit*> GetTrackFileList();
 	~Radar();

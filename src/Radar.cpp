@@ -46,6 +46,21 @@ void Radar::CheckTrackedArea() {
 	}
 }
 
+bool Radar::CollisionCheck() {
+	for (size_t i = 0; i < trackedAircrafts.size(); i++) {
+		if (i != trackedAircrafts.size() - 1) {
+			if (trackedAircrafts[i]->GetPosition()[0] != (trackedAircrafts[i + 1]->GetPosition()[0] - 1) ||
+				trackedAircrafts[i]->GetPosition()[0] != (trackedAircrafts[i + 1]->GetPosition()[0] + 1) ||
+				trackedAircrafts[i]->GetPosition()[1] != (trackedAircrafts[i + 1]->GetPosition()[1] - 1) ||
+				trackedAircrafts[i]->GetPosition()[1] != (trackedAircrafts[i + 1]->GetPosition()[1] + 1)) {
+				// If the position in x is less or greater than 1, same in y: We check for collision (no diagonal check here)
+				return false;
+			}
+		}
+	}
+	return true;
+}
+
 vector<Hit*> Radar::GetHitList() {
 	return hitList;
 }
