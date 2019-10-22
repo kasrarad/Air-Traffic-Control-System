@@ -20,8 +20,8 @@ private:
 public:
 	void Initialize();
 	void LoadAircrafts(); // Loads all aircrafts from TestCase
-	void CheckTrackedArea();
-	bool CollisionCheck();
+	void CheckTrackedArea(); // Adds all aircraft inside the area
+	bool CollisionCheck(); // Detects collision for near aircrafts
 	std::vector<Hit*> GetHitList();
 	std::vector<Hit*> GetTrackFileList();
 	~Radar();
