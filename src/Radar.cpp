@@ -1,6 +1,9 @@
 #include "Radar.h"
 #include "TestCase.h"
 
+#include <sstream>
+#include <stdlib.h>
+
 using namespace std;
 
 void Radar::Initialize() {
@@ -79,6 +82,21 @@ Hit* Radar::FindAircraft(int id, std::vector<Hit*> aircrafts) {
 	return NULL;
 }
 
+void Radar::FindAllUnknowns() {
+	for (size_t i = 0; i < trackedAircrafts.size(); i++) {
+		if (trackedAircrafts[i]->GetID() == -1) {
+			int n1 = -1;
+			int n2 = unknownCount;
+			stringstream concat;
+			concat<<n1<<n2;
+			int number = 0;
+			concat>>number;
+			trackedAircrafts[i]->SetNewHit(number, trackedAircrafts[i]->GetSpeed()[0], trackedAircrafts[i]->GetSpeed()[1], trackedAircrafts[i]->GetSpeed()[2], trackedAircrafts[i]->GetPosition()[0], trackedAircrafts[i]->GetPosition()[1], trackedAircrafts[i]->GetPosition()[2], trackedAircrafts[i]->GetTime());
+			unknownCount++;
+		}
+	}
+}
+
 void Radar::ChangeAltitude(int id, int n) {
 	Hit* trackedAircraft = FindAircraft(id, trackedAircrafts);
 	Hit* hitAircraft = FindAircraft(id, hitList);
@@ -100,13 +118,14 @@ void Radar::ChangeDirection(int id) {
 	Hit* trackedAircraft = FindAircraft(id, trackedAircrafts);
 	Hit* hitAircraft = FindAircraft(id, hitList);
 
-	trackedAircraft->SetNewHit(id, -trackedAircraft->GetSpeed()[0], trackedAircraft->GetSpeed()[1], trackedAircraft->GetSpeed()[2], trackedAircraft->GetPosition()[0], trackedAircraft->GetPosition()[1], trackedAircraft->GetPosition()[2] + (n * 1000), trackedAircraft->GetTime());
-	hitAircraft->SetNewHit(id, -hitAircraft->GetSpeed()[0], hitAircraft->GetSpeed()[1], hitAircraft->GetSpeed()[2], hitAircraft->GetPosition()[0], hitAircraft->GetPosition()[1], hitAircraft->GetPosition()[2] + (n * 1000), hitAircraft->GetTime());
+	trackedAircraft->SetNewHit(id, -trackedAircraft->GetSpeed()[0], trackedAircraft->GetSpeed()[1], trackedAircraft->GetSpeed()[2], trackedAircraft->GetPosition()[0], trackedAircraft->GetPosition()[1], trackedAircraft->GetPosition()[2], trackedAircraft->GetTime());
+	hitAircraft->SetNewHit(id, -hitAircraft->GetSpeed()[0], hitAircraft->GetSpeed()[1], hitAircraft->GetSpeed()[2], hitAircraft->GetPosition()[0], hitAircraft->GetPosition()[1], hitAircraft->GetPosition()[2], hitAircraft->GetTime());
 }
 
 void Radar::HoldingPattern(int id) {
 	// Make it so we go around a small square on display ?
-	// Every time amount passed, move according to speed
+	// Every time amount passed, move according to speed<
+	// Make it stop
 }
 
 void Radar::ReportPositionVelocity(int id) {
