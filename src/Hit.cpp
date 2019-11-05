@@ -34,5 +34,16 @@ int Hit::GetTime() {
 	return time;
 }
 
+void Hit::SetNewHit(int identification, int speedX, int speedY, int speedZ, int positionX, int positionY, int positionZ, int timeEntry) {
+	id = identification;
+	vx = speedX;
+	vy = speedY;
+	vz = speedZ;
+	x = positionX;
+	y = positionY;
+	z = positionZ;
+	time = timeEntry;
+}
+
 Hit::~Hit() {
 }

@@ -16,5 +16,6 @@ public:
 	virtual std::vector<int> GetSpeed();
 	virtual std::vector<int> GetPosition();
 	virtual int GetTime();
+	virtual void SetNewHit(int identification, int speedX, int speedY, int speedZ, int positionX, int positionY, int positionZ, int timeEntry);
 	virtual ~Hit();
 };

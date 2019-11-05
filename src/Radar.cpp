@@ -69,6 +69,70 @@ vector<Hit*> Radar::GetTrackFileList() {
 	return trackedAircrafts;
 }
 
+// All Commands
+
+Hit* Radar::FindAircraft(int id, std::vector<Hit*> aircrafts) {
+	for (size_t i = 0; i < aircrafts.size(); i++) {
+		if (id == aircrafts[i]->GetID())
+			return aircrafts[i];
+	}
+	return NULL;
+}
+
+void Radar::ChangeAltitude(int id, int n) {
+	Hit* trackedAircraft = FindAircraft(id, trackedAircrafts);
+	Hit* hitAircraft = FindAircraft(id, hitList);
+
+	trackedAircraft->SetNewHit(id, trackedAircraft->GetSpeed()[0], trackedAircraft->GetSpeed()[1], trackedAircraft->GetSpeed()[2], trackedAircraft->GetPosition()[0], trackedAircraft->GetPosition()[1], trackedAircraft->GetPosition()[2] + (n * 1000), trackedAircraft->GetTime());
+	hitAircraft->SetNewHit(id, hitAircraft->GetSpeed()[0], hitAircraft->GetSpeed()[1], hitAircraft->GetSpeed()[2], hitAircraft->GetPosition()[0], hitAircraft->GetPosition()[1], hitAircraft->GetPosition()[2] + (n * 1000), hitAircraft->GetTime());
+}
+
+void Radar::ChangeSpeed(int id, int x, int y, int z) {
+	Hit* trackedAircraft = FindAircraft(id, trackedAircrafts);
+	Hit* hitAircraft = FindAircraft(id, hitList);
+
+	trackedAircraft->SetNewHit(id, x, y, z, trackedAircraft->GetPosition()[0], trackedAircraft->GetPosition()[1], trackedAircraft->GetPosition()[2], trackedAircraft->GetTime());
+	hitAircraft->SetNewHit(id, x, y, z, hitAircraft->GetPosition()[0], hitAircraft->GetPosition()[1], hitAircraft->GetPosition()[2], hitAircraft->GetTime());
+}
+
+void Radar::ChangeDirection(int id) {
+	// Changing velocity in x (opposite direction) in horizontal plane
+	Hit* trackedAircraft = FindAircraft(id, trackedAircrafts);
+	Hit* hitAircraft = FindAircraft(id, hitList);
+
+	trackedAircraft->SetNewHit(id, -trackedAircraft->GetSpeed()[0], trackedAircraft->GetSpeed()[1], trackedAircraft->GetSpeed()[2], trackedAircraft->GetPosition()[0], trackedAircraft->GetPosition()[1], trackedAircraft->GetPosition()[2] + (n * 1000), trackedAircraft->GetTime());
+	hitAircraft->SetNewHit(id, -hitAircraft->GetSpeed()[0], hitAircraft->GetSpeed()[1], hitAircraft->GetSpeed()[2], hitAircraft->GetPosition()[0], hitAircraft->GetPosition()[1], hitAircraft->GetPosition()[2] + (n * 1000), hitAircraft->GetTime());
+}
+
+void Radar::HoldingPattern(int id) {
+	// Make it so we go around a small square on display ?
+	// Every time amount passed, move according to speed
+}
+
+void Radar::ReportPositionVelocity(int id) {
+	for (size_t i = 0; i < trackedAircrafts.size(); i++) {
+		if (id == trackedAircrafts[i]->GetID())
+			DisplayPositionAndVelocity(i);
+	}
+}
+
+void Radar::DisplayPositionAndVelocity(int index) {
+	cout<<"Position: ("<<trackedAircrafts[index]->GetPosition()[0]<<", "<<trackedAircrafts[index]->GetPosition()[1]<<", "<<trackedAircrafts[index]->GetPosition()[2]<<")"<<endl;
+	cout<<"Velocity: ("<<trackedAircrafts[index]->GetSpeed()[0]<<", "<<trackedAircrafts[index]->GetSpeed()[1]<<", "<<trackedAircrafts[index]->GetSpeed()[2]<<")"<<endl;
+}
+
+void HoldingPatternToAll() {
+	// Make it so we go around a small square on display ?
+	// Every time amount passed, move according to speed
+}
+
+void Radar::ReportAircraft() { // all
+	for (size_t i = 0; i < trackedAircrafts.size(); i++) {
+		cout<<"ID: "<<trackedAircrafts[i]->GetID()<<endl;
+		DisplayPositionAndVelocity(i);
+	}
+}
+
 Radar::~Radar() {
 	for (vector<Hit*>::iterator it = hitList.begin(); it < hitList.end(); it++) {
 		delete *it;
