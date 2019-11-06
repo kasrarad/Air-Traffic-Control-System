@@ -106,8 +106,6 @@ void* updatePos(void *){
 	return 0;
 }
 
-
-
 void* server(void *){
 	chid = ChannelCreate(0); //Add error checking here
 
@@ -199,11 +197,11 @@ int main() {
 			case 2:
 				if(!displayIsPaused) {
 					timer_delete(timer_display);
-					displayIsPaused=true;
+					displayIsPaused = true;
 					cout << "Display Paused" << endl;
 				} else {
 					setupCreateStartT(5,700000000, PULSE_DISPLAY, &timer_display);
-					displayIsPaused=false;
+					displayIsPaused = false;
 				}
 				break;
 
@@ -259,7 +257,7 @@ int main() {
 
 			switch(allcommand) {
 				case 1:
-					radar.HoldingPatternToAll();
+					//radar.HoldingPatternToAll();
 					break;
 
 				case 2:
