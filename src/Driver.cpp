@@ -17,10 +17,7 @@ int main() {
 	cout<<"Generated all aircrafts in a list of hits and tracked aircrafts."<< endl;
 
 	d1.PrintGrid(radar.GetTrackFileList());
-	radar.FindAllUnknowns();
-	for (size_t i = 0; i < radar.GetTrackFileList().size(); i++) {
-		cout<<radar.GetTrackFileList()[i]->GetID()<<endl;
-	}
+	radar.LogToOutput(60);
 
 	return 0;
 }

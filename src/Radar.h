@@ -7,11 +7,11 @@
 
 #include <vector>
 #include <iostream>
-#include <pthread.h>
-#include <sched.h>
-#include <sys/netmgr.h>
-#include <sys/neutrino.h>
-#include <time.h>
+#include <fstream>
+#include <sstream>
+#include <stdlib.h>
+#include <cmath>
+
 
 /*
  * Radar has a Tracker, Controls and Inputs
@@ -23,16 +23,20 @@ private:
 	int dimensionXY = 100000; // miles
 	int dimensionZ = 25000; // miles
 	int paramNum = 8; // Number of parameters in TestCase
+	int distanceXY = 3;
+	int distanceZ = 1000;
 	std::vector<Hit*> hitList; // We keep track of all the hits
 	std::vector<Hit*> trackedAircrafts; // List of tracked aircraft files
 public:
 	void Initialize();
 	static void* Timer(void *arg);
 	void LoadAircrafts(); // Loads all aircrafts from TestCase
-	void CheckTrackedArea(); // Adds all aircraft inside the area
-	bool CollisionCheck(); // Detects collision for near aircrafts
+	void CheckTrackedArea(int time); // Adds all aircraft inside the area
+	void LogToOutput(int time);
+	void CollisionCheck(int time); // Detects collision for near aircrafts
+	void UpdatePosition(int time);
 	std::vector<Hit*> GetHitList();
-	std::vector<Hit*> GetTrackFileList();
+	std::vector<Hit*> GetTrackFileList(); // Get Active
 	void FindAllUnknowns();
 	Hit* FindAircraft(int id, std::vector<Hit*> list); // Used to find specific aircrafts in any list
 	void ChangeAltitude(int id, int n); // Individual

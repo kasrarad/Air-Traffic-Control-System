@@ -1,14 +1,12 @@
 #include "Radar.h"
 #include "TestCase.h"
 
-#include <sstream>
-#include <stdlib.h>
-
 using namespace std;
 
 void Radar::Initialize() {
 	LoadAircrafts();
-	CheckTrackedArea();
+	CheckTrackedArea(15);
+	//logFile.open ("LogFile.txt");
 }
 
 void Radar::LoadAircrafts() {
@@ -28,40 +26,87 @@ void Radar::LoadAircrafts() {
 	}
 }
 
-void Radar::CheckTrackedArea() {
+void Radar::CheckTrackedArea(int time) {
 	int x = 0;
 	int y = 1;
 	int z = 2;
-	for (size_t i = 0; i < hitList.size(); i++) { // array[i][j]
-		if (hitList[i]->GetPosition()[x] <= dimensionXY && hitList[i]->GetPosition()[y] <= dimensionXY && hitList[i]->GetPosition()[z] <= dimensionZ) {
-			int id = hitList[i]->GetID();
-			int speedX = hitList[i]->GetSpeed()[x];
-			int speedY = hitList[i]->GetSpeed()[y];
-			int speedZ = hitList[i]->GetSpeed()[z];
-			int posX = hitList[i]->GetPosition()[x];
-			int posY = hitList[i]->GetPosition()[y];
-			int posZ = hitList[i]->GetPosition()[z];
-			int timeE = hitList[i]->GetTime();
+	if (time % 15 == 0 ) {
+		for (size_t i = 0; i < hitList.size(); i++) { // array[i][j]
+			if (hitList[i]->GetPosition()[x] <= dimensionXY && hitList[i]->GetPosition()[y] <= dimensionXY && hitList[i]->GetPosition()[z] <= dimensionZ) {
+				int id = hitList[i]->GetID();
+				int speedX = hitList[i]->GetSpeed()[x];
+				int speedY = hitList[i]->GetSpeed()[y];
+				int speedZ = hitList[i]->GetSpeed()[z];
+				int posX = hitList[i]->GetPosition()[x];
+				int posY = hitList[i]->GetPosition()[y];
+				int posZ = hitList[i]->GetPosition()[z];
+				int timeE = hitList[i]->GetTime();
 
-			Hit* trackFile = new Hit(id, speedX, speedY, speedZ, posX, posY, posZ, timeE);
-			trackedAircrafts.push_back(trackFile);
+				Hit* trackFile = new Hit(id, speedX, speedY, speedZ, posX, posY, posZ, timeE);
+				trackedAircrafts.push_back(trackFile);
+			}
 		}
 	}
 }
 
-bool Radar::CollisionCheck() {
-	for (size_t i = 0; i < trackedAircrafts.size(); i++) {
-		if (i != trackedAircrafts.size() - 1) {
-			if (trackedAircrafts[i]->GetPosition()[0] != (trackedAircrafts[i + 1]->GetPosition()[0] - 1) ||
-				trackedAircrafts[i]->GetPosition()[0] != (trackedAircrafts[i + 1]->GetPosition()[0] + 1) ||
-				trackedAircrafts[i]->GetPosition()[1] != (trackedAircrafts[i + 1]->GetPosition()[1] - 1) ||
-				trackedAircrafts[i]->GetPosition()[1] != (trackedAircrafts[i + 1]->GetPosition()[1] + 1)) {
-				// If the position in x is less or greater than 1, same in y: We check for collision (no diagonal check here)
-				return false;
+void Radar::LogToOutput(int time) {
+	if (time % 60 == 0 ) {
+		ofstream logFile;
+		logFile.open("LogFile.txt", ios_base::app);
+		logFile << "Active List at time: " << time << endl;
+		for (size_t i = 0; i < trackedAircrafts.size(); i++){
+			logFile << "Plane ID: " << trackedAircrafts[i]->GetID() << endl;
+			logFile <<"X: " << trackedAircrafts[i]->GetPosition()[0] << " Y: " << trackedAircrafts[i]->GetPosition()[1] << " Z: " << trackedAircrafts[i]->GetPosition()[2] << endl;
+			logFile <<"Vx: " << trackedAircrafts[i]->GetSpeed()[0] << " Vy: " << trackedAircrafts[i]->GetSpeed()[1] << " Vz: " << trackedAircrafts[i]->GetPosition()[2] << endl;
+		}
+		logFile << "Airspace Input at time: " << time << endl;
+		for (size_t i = 0; i < hitList.size(); i++){
+			logFile << "Plane ID: " << hitList[i]->GetID() << endl;
+			logFile << "X: " << hitList[i]->GetPosition()[0] << " Y: " << hitList[i]->GetPosition()[1] << " Z: " << hitList[i]->GetPosition()[2] << endl;
+			logFile << "Vx: " << hitList[i]->GetSpeed()[0] << " Vy: " << hitList[i]->GetSpeed()[1] << " Vz: " << hitList[i]->GetSpeed()[2] << endl;
+		}
+	}
+}
+
+void Radar::CollisionCheck(int time) {
+	if (time % 2 == 0) {
+		ofstream logFile;
+		logFile.open("LogFile.txt", ios_base::app);
+
+		// Compare all coordinates
+		for (size_t i = 0; i < trackedAircrafts.size(); i++) {
+			Hit* h = trackedAircrafts[i];
+			int posX1 = h->GetPosition()[0];
+			int posY1 = h->GetPosition()[1];
+			int posZ1 = h->GetPosition()[2];
+
+			for (size_t j = i + 1; j < trackedAircrafts.size(); j++) {
+				Hit* h = trackedAircrafts[j];
+				int posX2 = h->GetPosition()[0];
+				int posY2 = h->GetPosition()[1];
+				int posZ2 = h->GetPosition()[2];
+
+				int xCompare = pow(abs(posX2 - posX1) / 1000, 2);
+				int yCompare = pow(abs(posY2 - posY1) / 1000, 2);
+				int zCompare = abs(posZ2 - posZ1);
+				int distance = sqrt(xCompare + yCompare);
+
+				// We log to the log file
+				if (distance <= distanceXY && zCompare <= distanceZ) {
+					cout<<"Collision alert for aircraft ID: "<<trackedAircrafts[i]->GetID()<<" and ID: "<<trackedAircrafts[j]->GetID()<<endl;
+					logFile<<"Collision alert for aircraft ID: "<<trackedAircrafts[i]->GetID()<<" and ID: "<<trackedAircrafts[j]->GetID()<<endl;
+				}
 			}
 		}
 	}
-	return true;
+}
+
+void Radar::UpdatePosition(int time) {
+	if (time % 5 == 0 ) {
+		for (size_t i = 0; i < trackedAircrafts.size(); i++) {
+			trackedAircrafts[i]->SetNewHit(trackedAircrafts[i]->GetID(), trackedAircrafts[i]->GetSpeed()[0], trackedAircrafts[i]->GetSpeed()[1], trackedAircrafts[i]->GetSpeed()[2],  trackedAircrafts[i]->GetSpeed()[0] * time,  trackedAircrafts[i]->GetPosition()[1] * time,  trackedAircrafts[i]->GetPosition()[2] * time, time);
+		}
+	}
 }
 
 vector<Hit*> Radar::GetHitList() {
@@ -162,4 +207,5 @@ Radar::~Radar() {
 		delete *it;
 	}
 	trackedAircrafts.clear();
+	 //logFile.close();
 }
