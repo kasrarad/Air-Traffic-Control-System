@@ -6,7 +6,7 @@ using namespace std;
 void Radar::Initialize() {
 	LoadAircrafts();
 	CheckTrackedArea(15);
-	//logFile.open ("LogFile.txt");
+	logFile.open("LogFile.txt");
 }
 
 void Radar::LoadAircrafts() {
@@ -51,7 +51,6 @@ void Radar::CheckTrackedArea(int time) {
 
 void Radar::LogToOutput(int time) {
 	if (time % 60 == 0 ) {
-		ofstream logFile;
 		logFile.open("LogFile.txt", ios_base::app);
 		logFile << "Active List at time: " << time << endl;
 		for (size_t i = 0; i < trackedAircrafts.size(); i++){
@@ -70,7 +69,6 @@ void Radar::LogToOutput(int time) {
 
 void Radar::CollisionCheck(int time) {
 	if (time % 2 == 0) {
-		ofstream logFile;
 		logFile.open("LogFile.txt", ios_base::app);
 
 		// Compare all coordinates
@@ -180,6 +178,24 @@ void Radar::ReportPositionVelocity(int id) {
 	}
 }
 
+void Radar::DisplayAirspace() {
+	cout<<"Overall Airspace:"<<endl;
+	for (size_t i = 0; i < hitList.size(); i++) {
+		cout<<"ID: "<<hitList[i]->GetID()<<endl;
+		cout<<"Position: ("<<hitList[i]->GetPosition()[0]<<", "<<hitList[i]->GetPosition()[1]<<", "<<hitList[i]->GetPosition()[2]<<")"<<endl;
+		cout<<"Velocity: ("<<hitList[i]->GetSpeed()[0]<<", "<<hitList[i]->GetSpeed()[1]<<", "<<hitList[i]->GetSpeed()[2]<<")"<<endl;
+	}
+}
+
+void Radar::DisplayTrackedAircrafts() {
+	cout<<"Current Tracked Aircrafts:"<<endl;
+	for (size_t i = 0; i < trackedAircrafts.size(); i++) {
+		cout<<"ID: "<<trackedAircrafts[i]->GetID()<<endl;
+		cout<<"Position: ("<<trackedAircrafts[i]->GetPosition()[0]<<", "<<trackedAircrafts[i]->GetPosition()[1]<<", "<<trackedAircrafts[i]->GetPosition()[2]<<")"<<endl;
+		cout<<"Velocity: ("<<trackedAircrafts[i]->GetSpeed()[0]<<", "<<trackedAircrafts[i]->GetSpeed()[1]<<", "<<trackedAircrafts[i]->GetSpeed()[2]<<")"<<endl;
+	}
+}
+
 void Radar::DisplayPositionAndVelocity(int index) {
 	cout<<"Position: ("<<trackedAircrafts[index]->GetPosition()[0]<<", "<<trackedAircrafts[index]->GetPosition()[1]<<", "<<trackedAircrafts[index]->GetPosition()[2]<<")"<<endl;
 	cout<<"Velocity: ("<<trackedAircrafts[index]->GetSpeed()[0]<<", "<<trackedAircrafts[index]->GetSpeed()[1]<<", "<<trackedAircrafts[index]->GetSpeed()[2]<<")"<<endl;
@@ -197,6 +213,32 @@ void Radar::ReportAircraft() { // all
 	}
 }
 
+void Radar::AddAircraft(int id, int speedX, int speedY, int speedZ, int x, int y, int z, int time) {
+	Hit* newAircraft = new Hit(id, speedX, speedY, speedZ, x, y, z, time);
+	trackedAircrafts.push_back(newAircraft);
+	hitList.push_back(newAircraft);
+}
+
+void Radar::RemoveAircraft(int id) {
+	for (size_t i = 0; i < trackedAircrafts.size(); i++) {
+		if (trackedAircrafts[i]->GetID() == id)
+			trackedAircrafts.erase(trackedAircrafts.begin() + i); // Deleting with its index
+	}
+	for (size_t i = 0; i < hitList.size(); i++) {
+		if (hitList[i]->GetID() == id)
+			hitList.erase(hitList.begin() + i); // Deleting with its index
+	}
+}
+
+void Radar::ProjectPosition(int unitTime) {
+	// Maybe show the display too here with new positions ?
+	cout<<"Aircrafts projected with "<<unitTime<<"."<<endl;
+	for (size_t i = 0; i < hitList.size(); i++) {
+		cout<<"ID: "<<hitList[i]->GetID()<<endl;
+		cout<<"Position: ("<<hitList[i]->GetPosition()[0] + hitList[i]->GetSpeed()[0] * unitTime<<", "<<hitList[i]->GetPosition()[1] + hitList[i]->GetSpeed()[1] * unitTime<<", "<<hitList[i]->GetPosition()[2] + hitList[i]->GetSpeed()[2] * unitTime<<")"<<endl;
+	}
+}
+
 Radar::~Radar() {
 	for (vector<Hit*>::iterator it = hitList.begin(); it < hitList.end(); it++) {
 		delete *it;
@@ -207,5 +249,5 @@ Radar::~Radar() {
 		delete *it;
 	}
 	trackedAircrafts.clear();
-	 //logFile.close();
+	logFile.close();
 }

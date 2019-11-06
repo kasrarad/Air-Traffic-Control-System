@@ -19,6 +19,7 @@
 
 class Radar {
 private:
+	std::ofstream logFile;
 	int unknownCount = 0;
 	int dimensionXY = 100000; // miles
 	int dimensionZ = 25000; // miles
@@ -39,6 +40,7 @@ public:
 	std::vector<Hit*> GetTrackFileList(); // Get Active
 	void FindAllUnknowns();
 	Hit* FindAircraft(int id, std::vector<Hit*> list); // Used to find specific aircrafts in any list
+	// Commands
 	void ChangeAltitude(int id, int n); // Individual
 	void ChangeSpeed(int id, int x, int y, int z); // Individual
 	void ChangeDirection(int id); // Individual (horizontal plane)
@@ -47,5 +49,11 @@ public:
 	void DisplayPositionAndVelocity(int index);
 	void HoldingPatternToAll(); // All
 	void ReportAircraft(); // All
+	void DisplayAirspace();
+	void DisplayTrackedAircrafts();
+	// Airspace Management
+	void AddAircraft(int id, int vx, int vy, int vz, int x, int y, int z, int time);
+	void RemoveAircraft(int id);
+	void ProjectPosition(int unit);
 	~Radar();
 };
