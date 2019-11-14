@@ -69,7 +69,7 @@ void setupCreateStartT(int timer_period_sec,long first_timeoutAt, int pulse_code
 	event.sigev_coid = ConnectAttach(ND_LOCAL_NODE, 0,chid,_NTO_SIDE_CHANNEL, 0);
 	event.sigev_priority = prio;
 	event.sigev_code = pulse_code;
-	timer_create(CLOCK_MONOTONIC, &event, timer_id); //CLOCK_MONOTONIC = clock starting at 0, timebase never adjusted
+	timer_create(CLOCK_MONOTONIC, &event, timer_id); //CLOCK_MONOTONIC = clock starting at 0, time base never adjusted
 
 	itime.it_value.tv_sec = 0;
 	itime.it_value.tv_nsec = first_timeoutAt; ///000000000;
@@ -86,11 +86,12 @@ void* radarThread(void *){
 	return 0;
 }
 void* track(void *){
-	//radar.CollisionCheck(time_passed);
+	//radar.CollisionCheck(time_passed); // removed for testing
 	return 0;
 }
 void* displayThread(void *){
-	//radar.DisplayTrackedAircrafts();
+	//radar.DisplayTrackedAircrafts(); // removed for testing
+	radar.CheckUnknowns(); // Outputs a message if -1 plane found
 	trackedAircrafts = radar.GetTrackFileList(); //returns active vector
 	logs = trackFile.GetTrackedLogFile();
 	display.PrintGrid(trackedAircrafts);
@@ -115,7 +116,7 @@ void* server(void *){
 	chid = ChannelCreate(0); //Add error checking here
 
 	for (;;) {
-		// Waiting forerver for pulses(asynchronous)
+		// Waiting forever for pulses (asynchronous)
 		// Consider MsgReceivePulse() as well
 		rcvid = MsgReceive(chid, &msg, sizeof(msg), NULL);
 		if (rcvid == 0) { /* we got a pulse */
@@ -136,14 +137,7 @@ void* server(void *){
 }
 
 int main() {
-
-	int h = 25000;
-	int w = 100000;
-	int d = 100000;
-
 	bool running = true;
-	bool notfinished = true;
-	int exit = 1;
 	int command;
 	int idcommand;
 	int allcommand;
@@ -167,7 +161,7 @@ int main() {
 
 	bool displayIsPaused;
 
-	radar.LoadAircrafts(); // Parses the file to hit_list
+	radar.LoadAircrafts(); // Parses the file to hitList
 	pthread_create(&t_server, NULL, server, NULL);
 
 	while(running) {
@@ -185,7 +179,8 @@ int main() {
 	cout << "3 - Command Aircraft By ID" << endl;
 	cout << "4 - Command All Aircrafts" << endl;
 	cout << "5 - Modify Airspace" << endl;
-	cout << "6 - Exit" << endl;
+	cout << "6 - Identify Unknown Plane(s)" << endl;
+	cout << "7 - Exit" << endl;
 
 	cin >> command;
 
@@ -262,7 +257,7 @@ int main() {
 
 			switch(allcommand) {
 				case 1:
-					//radar.HoldingPatternToAll();
+					radar.HoldingPatternToAll();
 					break;
 
 				case 2:
@@ -331,6 +326,10 @@ int main() {
 					}
 					break;
 			case 6:
+				radar.FindAllUnknownsAndIdentify();
+				cout<<"All unknown plane(s) have been identified with a new ID."<<endl;
+				break;
+			case 7:
 				running = false;
 				break;
 		}

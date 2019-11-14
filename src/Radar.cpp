@@ -125,7 +125,20 @@ Hit* Radar::FindAircraft(int id, std::vector<Hit*> aircrafts) {
 	return NULL;
 }
 
-void Radar::FindAllUnknowns() {
+void Radar::CheckUnknowns() {
+	// Will output a message if an unknown plane with id -1 enters the radar
+	bool hasUnknowns = false;
+	for (size_t i = 0; i < trackedAircrafts.size(); i++) {
+		if (trackedAircrafts[i]->GetID() == -1) {
+			hasUnknowns = true;
+		}
+	}
+	if (hasUnknowns)
+		cout<<"One or more unknown plane(s) has been tracked. Identify them from the menu."<<endl;
+}
+
+void Radar::FindAllUnknownsAndIdentify() {
+	// Finds all unknown planes & identifies them
 	for (size_t i = 0; i < trackedAircrafts.size(); i++) {
 		if (trackedAircrafts[i]->GetID() == -1) {
 			int n1 = -1;
@@ -166,9 +179,11 @@ void Radar::ChangeDirection(int id) {
 }
 
 void Radar::HoldingPattern(int id) {
-	// Make it so we go around a small square on display ?
-	// Every time amount passed, move according to speed<
-	// Make it stop
+	// For now, the craft stops by putting its velocity to 0
+	for (size_t i = 0; i < trackedAircrafts.size(); i++) {
+			if (id == trackedAircrafts[i]->GetID())
+				trackedAircrafts[i]->SetNewHit(id, 0, 0, 0, trackedAircrafts[i]->GetPosition()[0], trackedAircrafts[i]->GetPosition()[1], trackedAircrafts[i]->GetPosition()[2], trackedAircrafts[i]->GetTime());
+	}
 }
 
 void Radar::ReportPositionVelocity(int id) {
@@ -201,9 +216,11 @@ void Radar::DisplayPositionAndVelocity(int index) {
 	cout<<"Velocity: ("<<trackedAircrafts[index]->GetSpeed()[0]<<", "<<trackedAircrafts[index]->GetSpeed()[1]<<", "<<trackedAircrafts[index]->GetSpeed()[2]<<")"<<endl;
 }
 
-void HoldingPatternToAll() {
-	// Make it so we go around a small square on display ?
-	// Every time amount passed, move according to speed
+void Radar::HoldingPatternToAll() {
+	// For now, the craft stops by putting all aircraft's velocity to 0
+	for (size_t i = 0; i < trackedAircrafts.size(); i++) {
+		trackedAircrafts[i]->SetNewHit(trackedAircrafts[i]->GetID(), 0, 0, 0, trackedAircrafts[i]->GetPosition()[0], trackedAircrafts[i]->GetPosition()[1], trackedAircrafts[i]->GetPosition()[2], trackedAircrafts[i]->GetTime());
+	}
 }
 
 void Radar::ReportAircraft() { // all

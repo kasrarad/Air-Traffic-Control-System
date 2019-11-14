@@ -38,7 +38,8 @@ public:
 	void UpdatePosition(int time);
 	std::vector<Hit*> GetHitList();
 	std::vector<Hit*> GetTrackFileList(); // Get Active
-	void FindAllUnknowns();
+	void CheckUnknowns();
+	void FindAllUnknownsAndIdentify();
 	Hit* FindAircraft(int id, std::vector<Hit*> list); // Used to find specific aircrafts in any list
 	// Commands
 	void ChangeAltitude(int id, int n); // Individual

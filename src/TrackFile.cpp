@@ -5,7 +5,6 @@
 using namespace std;
 
 TrackFile::TrackFile(){
-
 }
 
 void TrackFile::StoreAircrafts(vector<Hit*> aircrafts) {
@@ -48,4 +47,8 @@ int TrackFile::GetTime() {
 }
 
 TrackFile::~TrackFile() {
+	for (vector<Hit*>::iterator it = trackedLogFile.begin(); it < trackedLogFile.end(); it++) {
+		delete *it;
+	}
+	trackedLogFile.clear();
 }
