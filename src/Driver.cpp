@@ -24,8 +24,11 @@
 using namespace std;
 
 Display display;
-vector<Hit*> trackedAircrafts;
+TrackFile trackFile;
 Radar radar;
+
+vector<Hit*> trackedAircrafts;
+vector<Hit*> logs;
 
 bool scanned = false;
 bool run = true;
@@ -83,19 +86,21 @@ void* radarThread(void *){
 	return 0;
 }
 void* track(void *){
-	radar.CollisionCheck(time_passed);
+	//radar.CollisionCheck(time_passed);
 	return 0;
 }
 void* displayThread(void *){
-	radar.DisplayTrackedAircrafts();
+	//radar.DisplayTrackedAircrafts();
 	trackedAircrafts = radar.GetTrackFileList(); //returns active vector
+	logs = trackFile.GetTrackedLogFile();
 	display.PrintGrid(trackedAircrafts);
 	return 0;
 }
 void* store(void *){
 	end_time = time(NULL);
 	time_passed = (int) difftime(end_time, start_time);
-	radar.LogToOutput(time_passed);
+	radar.LogToOutput(time_passed); // Log to our output file
+	trackFile.StoreAircrafts(trackedAircrafts); // Storing the current aircrafts to the logs
 	return 0;
 }
 
@@ -312,7 +317,7 @@ int main() {
 					case 3:
 						cout << "Enter aircraft ID:";
 						cin >> logid;
-						//radar.getLog(logid); // Not done yet
+						trackFile.GetLogByID(logid);
 						break;
 
 					case 4:

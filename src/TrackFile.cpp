@@ -4,20 +4,27 @@
 
 using namespace std;
 
-TrackFile::TrackFile(int identification, int speedX, int speedY, int speedZ, int positionX, int positionY, int positionZ, int timeEntry):
-Hit(identification, speedX, speedY, speedZ, positionX, positionY, positionZ, timeEntry) {
-	this->id = identification;
-	this->velocity[0] = speedX;
-	this->velocity[1] = speedY;
-	this->velocity[2] = speedZ;
-	this->position[0] = positionX;
-	this->position[1] = positionY;
-	this->position[2] = positionZ;
-	this->time = timeEntry;
-}
-
 TrackFile::TrackFile(){
 
+}
+
+void TrackFile::StoreAircrafts(vector<Hit*> aircrafts) {
+	for (size_t i = 0; i < aircrafts.size(); i++)
+		trackedLogFile.push_back(aircrafts[i]);
+}
+
+void TrackFile::GetLogByID(int id) {
+	// Maybe show the display too here with new positions ?
+	cout<<"Here are the logs for aircraft ID #"<<id<<"."<<endl;
+	for (size_t i = 0; i < trackedLogFile.size(); i++) {
+		if (trackedLogFile[i]->GetID() == id) {
+			cout<<"--------------------------------------------------------------------------------"<<endl;
+			cout<<"Position: ("<<trackedLogFile[i]->GetPosition()[0]<<", "<<trackedLogFile[i]->GetPosition()[1]<<", "<<trackedLogFile[i]->GetPosition()[2]<<")"<<endl;
+			cout<<"Velocity: ("<<trackedLogFile[i]->GetSpeed()[0]<<", "<<trackedLogFile[i]->GetSpeed()[1]<<", "<<trackedLogFile[i]->GetSpeed()[2]<<")"<<endl;
+			cout<<"Time: "<<trackedLogFile[i]->GetTime()<<endl;
+			cout<<"--------------------------------------------------------------------------------"<<endl;
+		}
+	}
 }
 
 int TrackFile::GetID() {
@@ -30,6 +37,10 @@ std::vector<int> TrackFile::GetSpeed() {
 
 std::vector<int> TrackFile::GetPosition() {
 	return position;
+}
+
+std::vector<Hit*> TrackFile::GetTrackedLogFile() {
+	return trackedLogFile;
 }
 
 int TrackFile::GetTime() {
