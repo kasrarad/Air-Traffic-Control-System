@@ -10,7 +10,7 @@ void Radar::Initialize() {
 }
 
 void Radar::LoadAircrafts() {
-	TestCase aircrafts;
+	/*TestCase aircrafts;
 	for (size_t i = 1; i <= sizeof(aircrafts.airplane_schedule) / sizeof(aircrafts.airplane_schedule[0]) / paramNum; i++) {
 		int id = aircrafts.airplane_schedule[i - 1 + 7 * (i - 1)];
 		int speedX = aircrafts.airplane_schedule[i + 0 + 7 * (i - 1)];
@@ -23,7 +23,51 @@ void Radar::LoadAircrafts() {
 
 		Hit* hit = new Hit(id, speedX, speedY, speedZ, x, y, z, time);
 		hitList.push_back(hit);
+	}*/
+
+	// We first open the input file to load all incoming aircrafts
+	ifstream inputFile;
+	inputFile.open("Input.txt", ios::app);
+
+	string id, speedX, speedY, speedZ, x, y, z, time;
+
+	while(inputFile) {
+		getline(inputFile, id, ',');
+		getline(inputFile, speedX, ',');
+		getline(inputFile, speedY, ',');
+		getline(inputFile, speedZ, ',');
+		getline(inputFile, x, ',');
+		getline(inputFile, y, ',');
+		getline(inputFile, z, ',');
+		getline(inputFile, time, ',');
+
+		istringstream iss1 (id);
+		istringstream iss2 (speedX);
+		istringstream iss3 (speedY);
+		istringstream iss4 (speedZ);
+		istringstream iss5 (x);
+		istringstream iss6 (y);
+		istringstream iss7 (z);
+		istringstream iss8 (time);
+
+		int n1, n2, n3, n4, n5, n6, n7, n8;
+		iss1>>n1;
+		iss2>>n2;
+		iss3>>n3;
+		iss4>>n4;
+		iss5>>n5;
+		iss6>>n6;
+		iss7>>n7;
+		iss8>>n8;
+
+		Hit* hit = new Hit(n1, n2, n3, n4, n5, n6, n7, n8);
+		hitList.push_back(hit);
+
+		if (inputFile.eof()) {
+			break;
+		}
 	}
+	inputFile.close();
 }
 
 void Radar::CheckTrackedArea(int time) {

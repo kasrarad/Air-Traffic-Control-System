@@ -20,10 +20,10 @@
 class Radar {
 private:
 	std::ofstream logFile;
+	int paramNum = 8;
 	int unknownCount = 0;
 	int dimensionXY = 100000; // miles
 	int dimensionZ = 25000; // miles
-	int paramNum = 8; // Number of parameters in TestCase
 	int distanceXY = 3;
 	int distanceZ = 1000;
 	std::vector<Hit*> hitList; // We keep track of all the hits

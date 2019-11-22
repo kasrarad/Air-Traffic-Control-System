@@ -167,7 +167,7 @@ int main() {
 	while(running) {
 	trackedAircrafts.clear();
 
-	cout << "***Air Traffic Controller***"<< endl;
+	cout << "-----------------------------------------[Air Traffic Controller]-----------------------------------------"<< endl;
 	cout << "Input the command number you would like to execute:" << endl;
 	cout << "1 - Run airspace" << endl;
 
